@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Heart Failure Prediction</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f8f8f8; }
+        .container { max-width: 540px; margin: 40px auto; background: #fff; padding: 28px 32px 24px 32px; border-radius: 10px; box-shadow: 0 2px 12px #bbb; }
+        h2 { text-align: center; margin-bottom: 8px; }
+        .desc { text-align: center; color: #555; font-size: 1em; margin-bottom: 18px; }
+        form { display: flex; flex-direction: column; gap: 10px; }
+        .form-group { display: flex; flex-direction: column; }
+        label { font-weight: 500; margin-bottom: 2px; }
+        input[type="number"], select { padding: 7px; border: 1px solid #ccc; border-radius: 4px; }
+        input[type="number"]:invalid { border-color: #e74c3c; }
+        button { margin-top: 18px; padding: 12px; background: #007bff; color: #fff; border: none; border-radius: 4px; font-size: 1.1em; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result { margin-top: 22px; font-size: 1.2em; text-align: center; color: #222; }
+        .error { color: #e74c3c; }
+        .section-title { margin-top: 18px; font-size: 1.05em; color: #007bff; font-weight: 600; }
+        .note { font-size: 0.95em; color: #888; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Heart Failure Prediction</h2>
+        <div class="desc">
+            Enter the patient's clinical data below to predict the risk of heart failure.<br>
+            <span class="note">All fields are required.</span>
+        </div>
+        <form id="prediction-form" method="post" action="/" autocomplete="off">
+            <div class="section-title">Demographics</div>
+            <div class="form-group">
+                <label for="age">Age (years)</label>
+                <input type="number" name="age" min="18" max="120" required>
+            </div>
+            <div class="form-group">
+                <label for="sex">Sex</label>
+                <select name="sex" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="1">Male</option>
+                    <option value="0">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="smoking">Smoking</label>
+                <select name="smoking" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="diabetes">Diabetes</label>
+                <select name="diabetes" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="anaemia">Anaemia</label>
+                <select name="anaemia" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="high_blood_pressure">High Blood Pressure</label>
+                <select name="high_blood_pressure" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+
+            <div class="section-title">Clinical Measurements</div>
+            <div class="form-group">
+                <label for="creatinine_phosphokinase">Creatinine Phosphokinase (mcg/L)</label>
+                <input type="number" name="creatinine_phosphokinase" min="10" max="10000" required>
+            </div>
+            <div class="form-group">
+                <label for="ejection_fraction">Ejection Fraction (%)</label>
+                <input type="number" name="ejection_fraction" min="10" max="80" required>
+            </div>
+            <div class="form-group">
+                <label for="platelets">Platelets (kiloplatelets/mL)</label>
+                <input type="number" name="platelets" min="100" max="500" required>
+            </div>
+            <div class="form-group">
+                <label for="serum_creatinine">Serum Creatinine (mg/dL)</label>
+                <input type="number" name="serum_creatinine" min="0.1" max="10" step="0.1" required>
+            </div>
+            <div class="form-group">
+                <label for="serum_sodium">Serum Sodium (mEq/L)</label>
+                <input type="number" name="serum_sodium" min="100" max="160" required>
+            </div>
+            <div class="form-group">
+                <label for="time">Follow-up Period (days)</label>
+                <input type="number" name="time" min="1" max="365" required>
+            </div>
+            <button type="submit">Predict</button>
+        </form>
+        <div id="prediction-result" class="result {% if prediction and 'Error' in prediction %}error{% endif %}">
+            {% if prediction %}
+                <strong>Prediction:</strong> {{ prediction }}
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            const params = new URLSearchParams();
+            for (const pair of formData) {
+                params.append(pair[0], pair[1]);
+            }
+            const response = await fetch('/', {
+                method: 'POST',
+                body: params,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            const html = await response.text();
+            document.getElementById('prediction-result').innerHTML = html;
+        });
+    </script>
+</body>
+</html>
