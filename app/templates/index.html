@@ -1,114 +1,158 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heart Failure Prediction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: Arial, sans-serif; background: #f8f8f8; }
-        .container { max-width: 540px; margin: 40px auto; background: #fff; padding: 28px 32px 24px 32px; border-radius: 10px; box-shadow: 0 2px 12px #bbb; }
-        h2 { text-align: center; margin-bottom: 8px; }
-        .desc { text-align: center; color: #555; font-size: 1em; margin-bottom: 18px; }
-        form { display: flex; flex-direction: column; gap: 10px; }
-        .form-group { display: flex; flex-direction: column; }
-        label { font-weight: 500; margin-bottom: 2px; }
-        input[type="number"], select { padding: 7px; border: 1px solid #ccc; border-radius: 4px; }
-        input[type="number"]:invalid { border-color: #e74c3c; }
-        button { margin-top: 18px; padding: 12px; background: #007bff; color: #fff; border: none; border-radius: 4px; font-size: 1.1em; cursor: pointer; }
-        button:hover { background: #0056b3; }
-        .result { margin-top: 22px; font-size: 1.2em; text-align: center; color: #222; }
-        .error { color: #e74c3c; }
-        .section-title { margin-top: 18px; font-size: 1.05em; color: #007bff; font-weight: 600; }
-        .note { font-size: 0.95em; color: #888; margin-bottom: 8px; }
+        .section { display: none; }
+        .section.active { display: block; }
+        .transition-all { transition: all 0.3s ease; }
+        .error-border { border-color: #ef4444 !important; }
+        .note { font-size: 0.875rem; color: #6b7280; }
+        .section-title { font-size: 1.125rem; font-weight: 600; color: #1d4ed8; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h2>Heart Failure Prediction</h2>
-        <div class="desc">
-            Enter the patient's clinical data below to predict the risk of heart failure.<br>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto max-w-lg p-6 bg-white rounded-xl shadow-lg mt-10">
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-2">Heart Failure Prediction</h2>
+        <div class="text-center text-gray-600 mb-4">
+            Enter the patient's clinical data to predict the risk of heart failure.<br>
             <span class="note">All fields are required.</span>
         </div>
-        <form id="prediction-form" method="post" action="/" autocomplete="off">
-            <div class="section-title">Demographics</div>
-            <div class="form-group">
-                <label for="age">Age (years)</label>
-                <input type="number" name="age" min="18" max="120" required>
+        <form id="prediction-form" method="post" action="/" autocomplete="off" class="space-y-4">
+            <div id="demographics-section" class="section active transition-all">
+                <div class="section-title mb-3">Demographics</div>
+                <div class="space-y-3">
+                    <div>
+                        <label for="age" class="block text-sm font-medium text-gray-700">Age (years)</label>
+                        <input type="number" name="age" min="18" max="120" required
+                               class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="sex" class="block text-sm font-medium text-gray-700">Sex</label>
+                        <select name="sex" required
+                                class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Male</option>
+                            <option value="0">Female</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="sex">Sex</label>
-                <select name="sex" required>
-                    <option value="" disabled selected>Select</option>
-                    <option value="1">Male</option>
-                    <option value="0">Female</option>
-                </select>
+            <div id="medical-history-section" class="section transition-all">
+                <div class="section-title mb-3">Medical History</div>
+                <div class="space-y-3">
+                    <div>
+                        <label for="smoking" class="block text-sm font-medium text-gray-700">Smoking</label>
+                        <select name="smoking" required
+                                class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="diabetes" class="block text-sm font-medium text-gray-700">Diabetes</label>
+                        <select name="diabetes" required
+                                class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="anaemia" class="block text-sm font-medium text-gray-700">Anaemia</label>
+                        <select name="anaemia" required
+                                class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="high_blood_pressure" class="block text-sm font-medium text-gray-700">High Blood Pressure</label>
+                        <select name="high_blood_pressure" required
+                                class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="" disabled selected>Select</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="smoking">Smoking</label>
-                <select name="smoking" required>
-                    <option value="" disabled selected>Select</option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                </select>
+            <div id="clinical-section" class="section transition-all">
+                <div class="section-title mb-3">Clinical Measurements</div>
+                <div class="space-y-3">
+                    <div>
+                        <label for="creatinine_phosphokinase" class="block text-sm font-medium text-gray-700">Creatinine Phosphokinase (mcg/L)</label>
+                        <input type="number" name="creatinine_phosphokinase" min="10" max="10000" required
+                               class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="ejection_fraction" class="block text-sm font-medium text-gray-700">Ejection Fraction (%)</label>
+                        <input type="number" name="ejection_fraction" min="10" max="80" required
+                               class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="platelets" class="block text-sm font-medium text-gray-700">Platelets (kiloplatelets/mL)</label>
+                        <input type="number" name="platelets" min="100" max="500" required
+                               class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="serum_creatinine" class="block text-sm font-medium text-gray-700">Serum Creatinine (mg/dL)</label>
+                        <input type="number" name="serum_creatinine" min="0.1" max="10" step="0.1" required
+                               class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="serum_sodium" class="block text-sm font-medium text-gray-700">Serum Sodium (mEq/L)</label>
+                        <input type="number" name="serum_sodium" min="100" max="160" required
+                               class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="time" class="block text-sm font-medium text-gray-700">Follow-up Period (days)</label>
+                        <input type="number" name="time" min="1" max="365" required
+                               class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="diabetes">Diabetes</label>
-                <select name="diabetes" required>
-                    <option value="" disabled selected>Select</option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                </select>
+            <div class="flex gap-3 mt-4">
+                <button type="button" id="next-btn" class="flex-1 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-all">Next</button>
+                <button type="submit" id="predict-btn" class="flex-1 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all hidden">Predict</button>
             </div>
-            <div class="form-group">
-                <label for="anaemia">Anaemia</label>
-                <select name="anaemia" required>
-                    <option value="" disabled selected>Select</option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="high_blood_pressure">High Blood Pressure</label>
-                <select name="high_blood_pressure" required>
-                    <option value="" disabled selected>Select</option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                </select>
-            </div>
-
-            <div class="section-title">Clinical Measurements</div>
-            <div class="form-group">
-                <label for="creatinine_phosphokinase">Creatinine Phosphokinase (mcg/L)</label>
-                <input type="number" name="creatinine_phosphokinase" min="10" max="10000" required>
-            </div>
-            <div class="form-group">
-                <label for="ejection_fraction">Ejection Fraction (%)</label>
-                <input type="number" name="ejection_fraction" min="10" max="80" required>
-            </div>
-            <div class="form-group">
-                <label for="platelets">Platelets (kiloplatelets/mL)</label>
-                <input type="number" name="platelets" min="100" max="500" required>
-            </div>
-            <div class="form-group">
-                <label for="serum_creatinine">Serum Creatinine (mg/dL)</label>
-                <input type="number" name="serum_creatinine" min="0.1" max="10" step="0.1" required>
-            </div>
-            <div class="form-group">
-                <label for="serum_sodium">Serum Sodium (mEq/L)</label>
-                <input type="number" name="serum_sodium" min="100" max="160" required>
-            </div>
-            <div class="form-group">
-                <label for="time">Follow-up Period (days)</label>
-                <input type="number" name="time" min="1" max="365" required>
-            </div>
-            <button type="submit">Predict</button>
         </form>
-        <div id="prediction-result" class="result {% if prediction and 'Error' in prediction %}error{% endif %}">
-            {% if prediction %}
-                <strong>Prediction:</strong> {{ prediction }}
-            {% endif %}
-        </div>
+        <div id="prediction-result" class="mt-6 text-center text-lg text-gray-800"></div>
     </div>
 
     <script>
+        const sections = [
+            document.getElementById('demographics-section'),
+            document.getElementById('medical-history-section'),
+            document.getElementById('clinical-section')
+        ];
+        const nextBtn = document.getElementById('next-btn');
+        const predictBtn = document.getElementById('predict-btn');
+        let currentSection = 0;
+
+        function updateSections() {
+            sections.forEach((section, index) => {
+                section.classList.toggle('active', index === currentSection);
+            });
+            nextBtn.textContent = currentSection === sections.length - 1 ? 'Back' : 'Next';
+            predictBtn.classList.toggle('hidden', currentSection !== sections.length - 1);
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSection < sections.length - 1) {
+                currentSection++;
+            } else {
+                currentSection--;
+                if (currentSection < 0) currentSection = 0;
+            }
+            updateSections();
+        });
+
         document.getElementById('prediction-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const form = e.target;
@@ -117,16 +161,34 @@
             for (const pair of formData) {
                 params.append(pair[0], pair[1]);
             }
-            const response = await fetch('/', {
-                method: 'POST',
-                body: params,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            });
-            const html = await response.text();
-            document.getElementById('prediction-result').innerHTML = html;
+            predictBtn.textContent = 'Predicting...';
+            predictBtn.disabled = true;
+            try {
+                const response = await fetch('/', {
+                    method: 'POST',
+                    body: params,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                const html = await response.text();
+                document.getElementById('prediction-result').innerHTML = html;
+            } catch (error) {
+                document.getElementById('prediction-result').innerHTML = '<span class="text-red-500">Error: Unable to process prediction</span>';
+            } finally {
+                predictBtn.textContent = 'Predict';
+                predictBtn.disabled = false;
+            }
         });
+
+        // Add real-time validation for input fields
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('input', () => {
+                input.classList.toggle('error-border', !input.validity.valid);
+            });
+        });
+
+        updateSections();
     </script>
 </body>
 </html>
